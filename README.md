@@ -1,3 +1,4 @@
-# factisio.github.io
-Factis.io website
-Check it on http://factis.io
+
+# Factis.io website
+
+[Go check it !](http://factis.io)
