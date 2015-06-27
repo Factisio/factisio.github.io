@@ -1163,6 +1163,7 @@ body {
 <li><a href="#documentation">Documentation</a><ul>
 <li><a href="#add-and-remove">Add and Remove</a></li>
 <li><a href="#query">Query</a></li>
+<li><a href="#develop-additional-stores">Develop additional stores</a></li>
 </ul></li>
 </ul>
 </div>
@@ -1173,21 +1174,23 @@ body {
 <img src="logo-01.png" title="Factis database system" alt="" />
 
 </div>
-<p>The modular database system.</p>
+<p>The modular database system. Available on NPM as <a href="https://www.npmjs.com/package/factis">factis</a>.</p>
 <h1 id="presentation">Presentation</h1>
 <p>Factis is a modular datastore written in pure javascript (native C datastore coming). Factis is similar to RDF datastores, and in particular Hexastore implementations.</p>
-<p>The <code>factis</code> package is a ready-to-use version of the whole Factis ecosystem.</p>
-<p>Factis is made of a core module <code>factis-core</code> which contains the query API and the query engine.</p>
-<p>Then different datastore modules <code>factis-store-something</code> can be plugged in in order to provide different functionalities. The datastore modules comply to a simple triple store interface. Available modules are:</p>
+<p>The <a href="https://www.npmjs.com/package/factis">factis</a> package is a ready-to-use version of the whole Factis ecosystem.</p>
+<p>Factis is made of a core module <a href="https://www.npmjs.com/package/factis-core">factis-core</a> which contains the query API and the query engine.</p>
+<p>Then different datastore modules called factis-store-something can be plugged in, in order to provide different functionalities. The datastore modules comply to a simple triple store interface. Available modules are:</p>
 <ul>
-<li><code>factis-store-group</code> the basic store that allow to group several stores, providing the composition semantics.</li>
-<li><code>factis-store-hexastore</code> an efficient hexastore implementation in pure JS with no dependencies</li>
-<li><code>factis-store-identity</code> which provides the semantics for the <code>equals</code> and <code>not equals</code> predicates</li>
+<li><a href="https://www.npmjs.com/package/factis-store-group">factis-store-group</a> the basic store that allow to group several stores, providing the composition semantics.</li>
+<li><a href="https://www.npmjs.com/package/factis-store-hexastore">factis-store-hexastore</a> an efficient hexastore implementation in pure JS with no dependencies</li>
+<li><a href="https://www.npmjs.com/package/factis-store-identity">factis-store-identity</a> which provides the semantics for the <code>equals</code> and <code>not equals</code> predicates</li>
 <li>Some more to come ! (Dates, Geometry, JSON...)</li>
 </ul>
 <h1 id="install">Install</h1>
+<p>With Node package manager:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">npm</span> install factis</code></pre></div>
 <h1 id="usage">Usage</h1>
+<p>Here is a small example:</p>
 <div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> Factis<span class="op">=</span><span class="at">require</span>(<span class="st">&#39;factis&#39;</span>)<span class="op">;</span>
 
 <span class="kw">var</span> f <span class="op">=</span> <span class="kw">new</span> <span class="at">Factis</span>()<span class="op">;</span>
@@ -1199,7 +1202,7 @@ body {
 
 <span class="va">f</span>.<span class="at">query</span>(<span class="va">f</span>.<span class="at">fact</span>(<span class="va">f</span>.<span class="at">the</span>(<span class="st">&quot;Thing&quot;</span>)<span class="op">,</span><span class="st">&quot;is&quot;</span><span class="op">,</span><span class="st">&quot;nice&quot;</span>))<span class="op">;</span></code></pre></div>
 <h1 id="documentation">Documentation</h1>
-<p>Factis is basically an augmented triple store. CRUD operations are implemented by using only three operations: Add, Remove, Query.</p>
+<p>Factis is basically an augmented triple store. <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD</a> operations are implemented by using only three operations: Add, Remove, Query.</p>
 <h2 id="add-and-remove">Add and Remove</h2>
 <p>Add and remove single facts, or triples:</p>
 <div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="va">f</span>.<span class="at">add</span>(    <span class="va">f</span>.<span class="at">fact</span>(<span class="st">&quot;subject&quot;</span><span class="op">,</span><span class="st">&quot;predicate&quot;</span><span class="op">,</span><span class="st">&quot;object&quot;</span>) )<span class="op">;</span>
@@ -1231,6 +1234,26 @@ body {
   <span class="op">{</span> <span class="dt">Thing </span><span class="op">:</span> <span class="st">&quot;Factis&quot;</span> <span class="op">}</span>
   ]</code></pre></div>
 <p>If the query result is infinite, the query returns <code>null</code></p>
+<h2 id="develop-additional-stores">Develop additional stores</h2>
+<p>Check the sources of <a href="https://github.com/Factisio/factis-store-group">factis-store-group</a> on Github to see an example of the structure of a basic module.</p>
+<p>Factis stores must have a name which start with factis-store-</p>
+<p>These packages must exhibit 8 different functions that return sets of triples that match a query. These functions represents the 8 possible combinations of Subject, Predicate and Object presence:</p>
+<ul>
+<li><code>queryXXX</code> which should return <strong>all</strong> the triples that the store is aware of.</li>
+<li><code>queryXXO</code> which should return the triples that have a given Object</li>
+<li><code>queryXPX</code> which should return the triples that have a given Predicate</li>
+<li><code>queryXPO</code> which should return the triples that have given Predicate and Object</li>
+<li><code>querySXX</code> which should return the triples that have a given Subject</li>
+<li><code>querySXO</code> which should return the triples that have given Subject and Object</li>
+<li><code>querySPX</code> which should return the triples that have given Subject and Predicate</li>
+<li><code>querySPO</code> which should return the <strong>only</strong> triple that have given Subject, Predicate and Object</li>
+</ul>
+<p>These functions return the following values:</p>
+<ul>
+<li>If the set of triples is infinite, then the store should return <code>null</code></li>
+<li>If the set of triples is empty, the store should return the empty array <code>[]</code></li>
+<li>If the set of triples is finite, the store should return it as an array <code>[['s1','p1','o1'],['s2','p2','o2'],...]</code></li>
+</ul>
 <div class="references">
 
 </div>
