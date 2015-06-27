@@ -1157,7 +1157,13 @@ body {
 </div>
 <div id="TOC">
 <ul>
-<li><a href="#test">Test</a></li>
+<li><a href="#presentation">Presentation</a></li>
+<li><a href="#install">Install</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#documentation">Documentation</a><ul>
+<li><a href="#add-and-remove">Add and Remove</a></li>
+<li><a href="#query">Query</a></li>
+</ul></li>
 </ul>
 </div>
 <br/>
@@ -1167,9 +1173,64 @@ body {
 <img src="logo-01.png" title="Factis database system" alt="" />
 
 </div>
-<p>The modular database system</p>
-<h2 id="test">Test</h2>
-<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> Factis<span class="op">=</span><span class="at">require</span>(<span class="st">&#39;factis&#39;</span>)<span class="op">;</span></code></pre></div>
+<p>The modular database system.</p>
+<h1 id="presentation">Presentation</h1>
+<p>Factis is a modular datastore written in pure javascript (native C datastore coming). Factis is similar to RDF datastores, and in particular Hexastore implementations.</p>
+<p>The <code>factis</code> package is a ready-to-use version of the whole Factis ecosystem.</p>
+<p>Factis is made of a core module <code>factis-core</code> which contains the query API and the query engine.</p>
+<p>Then different datastore modules <code>factis-store-something</code> can be plugged in in order to provide different functionalities. The datastore modules comply to a simple triple store interface. Available modules are:</p>
+<ul>
+<li><code>factis-store-group</code> the basic store that allow to group several stores, providing the composition semantics.</li>
+<li><code>factis-store-hexastore</code> an efficient hexastore implementation in pure JS with no dependencies</li>
+<li><code>factis-store-identity</code> which provides the semantics for the <code>equals</code> and <code>not equals</code> predicates</li>
+<li>Some more to come ! (Dates, Geometry, JSON...)</li>
+</ul>
+<h1 id="install">Install</h1>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">npm</span> install factis</code></pre></div>
+<h1 id="usage">Usage</h1>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> Factis<span class="op">=</span><span class="at">require</span>(<span class="st">&#39;factis&#39;</span>)<span class="op">;</span>
+
+<span class="kw">var</span> f <span class="op">=</span> <span class="kw">new</span> <span class="at">Factis</span>()<span class="op">;</span>
+
+<span class="va">f</span>.<span class="at">add</span>([
+  <span class="va">f</span>.<span class="at">fact</span>(<span class="st">&quot;Factis&quot;</span><span class="op">,</span><span class="st">&quot;is&quot;</span><span class="op">,</span><span class="st">&quot;nice&quot;</span>)<span class="op">,</span>
+  <span class="va">f</span>.<span class="at">fact</span>(<span class="st">&quot;Factis&quot;</span><span class="op">,</span><span class="st">&quot;is&quot;</span><span class="op">,</span><span class="st">&quot;fast&quot;</span>)
+  ])<span class="op">;</span>
+
+<span class="va">f</span>.<span class="at">query</span>()<span class="op">;</span></code></pre></div>
+<h1 id="documentation">Documentation</h1>
+<p>Factis is basically an augmented triple store. CRUD operations are implemented by using only three operations: Add, Remove, Query.</p>
+<h2 id="add-and-remove">Add and Remove</h2>
+<p>Add and remove single facts, or triples:</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="va">f</span>.<span class="at">add</span>(    <span class="va">f</span>.<span class="at">fact</span>(<span class="st">&quot;subject&quot;</span><span class="op">,</span><span class="st">&quot;predicate&quot;</span><span class="op">,</span><span class="st">&quot;object&quot;</span>) )<span class="op">;</span>
+<span class="va">f</span>.<span class="at">remove</span>( <span class="va">f</span>.<span class="at">fact</span>(<span class="st">&quot;subject&quot;</span><span class="op">,</span><span class="st">&quot;predicate&quot;</span><span class="op">,</span><span class="st">&quot;object&quot;</span>) )<span class="op">;</span></code></pre></div>
+<p>Add and remove multiple facts, or triples:</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="va">f</span>.<span class="at">add</span>([
+   <span class="va">f</span>.<span class="at">fact</span>(<span class="st">&quot;s1&quot;</span><span class="op">,</span><span class="st">&quot;p1&quot;</span><span class="op">,</span><span class="st">&quot;o1&quot;</span>)
+   <span class="va">f</span>.<span class="at">fact</span>(<span class="st">&quot;s2&quot;</span><span class="op">,</span><span class="st">&quot;p2&quot;</span><span class="op">,</span><span class="st">&quot;o2&quot;</span>)
+])
+<span class="va">f</span>.<span class="at">remove</span>([
+   <span class="va">f</span>.<span class="at">fact</span>(<span class="st">&quot;s1&quot;</span><span class="op">,</span><span class="st">&quot;p1&quot;</span><span class="op">,</span><span class="st">&quot;o1&quot;</span>)
+   <span class="va">f</span>.<span class="at">fact</span>(<span class="st">&quot;s2&quot;</span><span class="op">,</span><span class="st">&quot;p2&quot;</span><span class="op">,</span><span class="st">&quot;o2&quot;</span>)
+])</code></pre></div>
+<h2 id="query">Query</h2>
+<p>Query operators are first order logic operators:</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> query <span class="op">=</span>
+  <span class="va">f</span>.<span class="at">and</span>(
+    <span class="va">f</span>.<span class="at">fact</span>( <span class="va">f</span>.<span class="at">the</span>(<span class="st">&quot;thing&quot;</span>) <span class="op">,</span> <span class="st">&quot;is&quot;</span> <span class="op">,</span> <span class="st">&quot;nice&quot;</span> )<span class="op">,</span>
+    <span class="va">f</span>.<span class="at">fact</span>( <span class="va">f</span>.<span class="at">the</span>(<span class="st">&quot;thing&quot;</span>) <span class="op">,</span> <span class="st">&quot;is&quot;</span> <span class="op">,</span> <span class="st">&quot;fast&quot;</span> )<span class="op">,</span>
+    <span class="va">f</span>.<span class="at">not</span>(
+      <span class="va">f</span>.<span class="at">fact</span>( <span class="va">f</span>.<span class="at">the</span>(<span class="st">&quot;thing&quot;</span>) <span class="op">,</span> <span class="st">&quot;is&quot;</span> <span class="op">,</span> <span class="st">&quot;bad&quot;</span> )
+      )
+    )<span class="op">;</span></code></pre></div>
+<p>To perform a query:</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> result <span class="op">=</span>
+  <span class="va">f</span>.<span class="at">query</span>( query )<span class="op">;</span></code></pre></div>
+<p>Query returns an array of maps which give values to the query variables:</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript">result <span class="op">==</span> [
+  <span class="op">{</span> <span class="dt">Thing </span><span class="op">:</span> <span class="st">&quot;Factis&quot;</span> <span class="op">}</span>
+  ]</code></pre></div>
+<p>If the query result is infinite, the query returns <code>null</code></p>
 <div class="references">
 
 </div>
