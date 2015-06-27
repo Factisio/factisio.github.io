@@ -35,7 +35,7 @@ f.add([
   f.fact("Factis","is","fast")
   ]);
 
-f.query();
+f.query(f.fact(f.the("Thing"),"is","nice"));
 ~~~
 
 # Documentation
