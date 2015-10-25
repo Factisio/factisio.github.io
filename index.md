@@ -73,8 +73,8 @@ f.remove([
 Add and remove single facts by accessing the underlying hexastore:
 
 ~~~{.javascript}
-var myExportString = f.hexastore.export();
-f.hexastore.import(myExportString);
+var myExportString = f.hexastore.exportString();
+f.hexastore.importString(myExportString);
 ~~~
 
 ## Query

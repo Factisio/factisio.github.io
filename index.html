@@ -1219,8 +1219,8 @@ body {
 ])</code></pre></div>
 <h2 id="import-and-export">Import and Export</h2>
 <p>Add and remove single facts by accessing the underlying hexastore:</p>
-<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> myExportString <span class="op">=</span> <span class="va">f</span>.<span class="va">hexastore</span>.<span class="at">export</span>()<span class="op">;</span>
-<span class="va">f</span>.<span class="va">hexastore</span>.<span class="at">import</span>(myExportString)<span class="op">;</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> myExportString <span class="op">=</span> <span class="va">f</span>.<span class="va">hexastore</span>.<span class="at">exportString</span>()<span class="op">;</span>
+<span class="va">f</span>.<span class="va">hexastore</span>.<span class="at">importString</span>(myExportString)<span class="op">;</span></code></pre></div>
 <h2 id="query">Query</h2>
 <p>Query operators are first order logic operators:</p>
 <div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> query <span class="op">=</span>
